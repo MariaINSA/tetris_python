@@ -29,10 +29,10 @@ class KeyBoard:
         root.bind("<Left>", self.move_left) #type 1 move
         root.bind("<Right>", self.move_right) #type 1 move
         root.bind("<Down>", self.soft_drop) #type 1 move -> soft drop
-        #root.bind("<Space bar>", self.hard_drop) #type 1 move -> soft drop
+        #root.bind("<space>", self.hard_drop) #type 1 move -> hard drop (CHECK)
         root.bind("<z>", self.rotate_right) #type 2 move
         root.bind("<x>", self.rotate_left) #type 2 move
-        root.bind("<c>", self.rotate_180) #type 2 move
+        #root.bind("<c>", self.rotate_180) #type 2 move -> not going to use this one
 
 
 
@@ -44,7 +44,10 @@ class KeyBoard:
     
     def soft_drop(self,event):
         self.update_game(True,[1,0])
-    
+
+    def hard_drop(self,event):
+        self.update_game(True,[20,0])
+
     def rotate_right(self,event):
         self.update_game(False,1)
     

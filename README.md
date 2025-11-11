@@ -1,6 +1,10 @@
 # Tetris in Python
 This repository will contain Tetris using the Tkinter library in python.
 
+This tetris will follow the srs rotation system, to understand it, this [video](https://www.youtube.com/watch?v=dgt1kWq2_7c) explains it fairly well.
+
+## How to play
+
 ## Code organisation
 - Main code (File): This will be used for the integration of the logic and graphic parts into one.
 - Graphic code (File): This will integrate the graphic side of the game.
