@@ -51,14 +51,11 @@ class Block:
             new_rotation=self.rotation
         # ROTATION
         else:
-            print("Rotation detected")
             new_pos = self.position
             new_rotation = (self.rotation+move_info) % 4
             new_block = block_shapes.block_order[self.block_type-1][new_rotation]*(self.block_type)
-            print(new_block)
 
         if(self.move_validation(grid,new_pos,new_block)):
-            print("Validated 1")
             self.position=new_pos
             self.rotation=new_rotation
             self.block=new_block
@@ -66,8 +63,6 @@ class Block:
         #this part is important because here goes wall kicks
         #...yay
         elif(move_type==False):
-            print("Wall kicking! Block:",self.block_type)
-            print("Rotation",self.rotation,"to",new_rotation)
             if self.block_type == 1:
                 wall_kick_offsets=block_shapes.wall_kicks_I[(self.rotation,new_rotation)]
             else:
@@ -75,9 +70,8 @@ class Block:
             
             for offset in wall_kick_offsets:
                 offset_pos = new_pos + np.array(offset)
-                print(offset_pos)
                 if(self.move_validation(grid,offset_pos,new_block)):
-                    print("Validated SRS")
+                    #print("Validated SRS")
                     self.position = offset_pos
                     self.rotation = new_rotation
                     self.block    = new_block
@@ -93,7 +87,6 @@ class Block:
                 if val!=0:
                     #check if out of bounds
                     if(position[0]+r >= max_row or position[1]+c < 2 or position[1]+c >= max_col):
-                        print("out of bounds")
                         return False
                     
                     #check if colliding
@@ -101,6 +94,22 @@ class Block:
                         print("collision with grid")
                         return False
         return True
+    
+    def check_block_under(self, grid):
+        max_row = len(grid) - 2
+        #We have to check all cells
+        for r, row in enumerate(self.block):
+            for c, val in enumerate(row):
+                if val!=0:
+                    #check if in lastline
+                    if(self.position[0]+r+1 >= max_row ):
+                        return True
+
+                    #check if there is something under
+                    if(grid[self.position[0]+r+1][self.position[1]+c] != 0):
+                        return True
+        return False
+
 
                     
 

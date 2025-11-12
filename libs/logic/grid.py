@@ -36,10 +36,35 @@ class Grid:
         pos[1]=block.position[1]
         for r, row in enumerate(block.block):
             for c, val in enumerate(row):
-                self.shadow_grid[pos[0]+r][pos[1]+c]=val
+                self.shadow_grid[pos[0]+r][pos[1]+c]=self.shadow_grid[pos[0]+r][pos[1]+c]+val
        
-    def update(self,place:list, type:int):
-        self.grid[place[0]][place[1]]=type
+    #def update(self,place:list, type:int):
+    #    self.grid[place[0]][place[1]]=type
+
+    def update_grid(self):
+        for r,row in enumerate(self.shadow_grid):
+            for c, val in enumerate(row):
+                self.grid[r][c]=val
+
+    def check_full_lines(self):
+        full_lines=[]
+        for r,row in enumerate(self.grid):
+            clear=True
+            print("checking row",row)
+            for c, val in enumerate(row[2:-2]):
+                if val == 0: #this indicates clear space
+                    print("space found in row",r)
+                    clear=False
+                    break
+            if (clear):
+                print("no space found in line",r)
+                full_lines.append(r)
+        return full_lines
+    
+    """def clear_full_lines(self,full_lines):
+        for r in full_lines:
+            for c,val in self.grid[]"""
+
 
     def __str__(self):
         string ='\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.grid])
