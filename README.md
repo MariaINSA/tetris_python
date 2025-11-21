@@ -3,6 +3,8 @@ This repository will contain Tetris using the Tkinter library in python.
 
 This tetris will follow the srs rotation system, to understand it, this [video](https://www.youtube.com/watch?v=dgt1kWq2_7c) explains it fairly well.
 
+Also, timings and general guidelines will be taken from the [Tetris Design Guideline](https://dn720004.ca.archive.org/0/items/2009-tetris-variant-concepts_202201/2009%20Tetris%20Design%20Guideline.pdf).
+
 ## How to play
 
 ## Code organisation

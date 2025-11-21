@@ -91,7 +91,7 @@ class Block:
                     
                     #check if colliding
                     if(grid[position[0]+r][position[1]+c] != 0):
-                        print("collision with grid")
+                        #print("collision with grid")
                         return False
         return True
     

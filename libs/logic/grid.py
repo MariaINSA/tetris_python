@@ -50,25 +50,23 @@ class Grid:
         full_lines=[]
         for r,row in enumerate(self.grid):
             clear=True
-            print("checking row",row)
             for c, val in enumerate(row[2:-2]):
                 if val == 0: #this indicates clear space
-                    print("space found in row",r)
                     clear=False
                     break
             if (clear):
-                print("no space found in line",r)
                 full_lines.append(r)
-        return full_lines
+
+        if (len(full_lines)!=0):
+            self.clear_full_lines(full_lines)
+        return len(full_lines)*100
     
-    """def clear_full_lines(self,full_lines):
+    def clear_full_lines(self,full_lines):
         for r in full_lines:
-            for c,val in self.grid[]"""
-
-
-    def __str__(self):
-        string ='\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.grid])
-        return string
+            # do a round of going down
+            while r >= 2:
+                self.grid[r]=self.grid[r-1]
+                r=r-1
     
     def delete(self):
         self.grid= [[0 for _ in range(self.cols)] for _ in range(self.rows)]
