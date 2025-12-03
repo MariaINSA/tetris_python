@@ -4,9 +4,12 @@ This file contains the class related to the graphic grid.
 """
 import tkinter as tk
 
+#offset between real and grey colours is 7
 colors = [
             "#7F7F7F","#00FFFF","#0000FF","#FF7F00", 
-            "#FFFF00","#00FF00", "#800080","#FF0000"
+            "#FFFF00","#00FF00", "#800080","#FF0000",
+            "#009999", "#000099", "#995200",
+            "#999900", "#009900", "#4D004D", "#990000"
         ]
 
 class Grid:
@@ -49,7 +52,6 @@ class Grid:
         self.canvas.configure(takefocus=0)
         return None
         
-
     def update(self,lgrid):
         cols=len(lgrid.shadow_grid[0])-4
         rows=len(lgrid.shadow_grid)-4

@@ -34,9 +34,18 @@ class Grid:
         pos=[0,0]
         pos[0]=block.position[0]
         pos[1]=block.position[1]
+        shadow_pos=block.hard_drop(self.grid)
+
+        #Getting the block in the grid
         for r, row in enumerate(block.block):
             for c, val in enumerate(row):
-                self.shadow_grid[pos[0]+r][pos[1]+c]=self.shadow_grid[pos[0]+r][pos[1]+c]+val
+                if val!=0:
+                    #shadow block
+                    self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]=val+7#(self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]%7)+val+7
+
+                    #block
+                    self.shadow_grid[pos[0]+r][pos[1]+c]=val#(self.shadow_grid[pos[0]+r][pos[1]+c]%7)+val
+                    
        
     #def update(self,place:list, type:int):
     #    self.grid[place[0]][place[1]]=type

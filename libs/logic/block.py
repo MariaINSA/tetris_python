@@ -45,15 +45,22 @@ class Block:
 
     def update_block_position(self,move_type,move_info,grid):
         # TRASLATION
-        if move_type:
+        if move_type==1:
             new_pos = self.position + np.array(move_info)
             new_block=self.block
             new_rotation=self.rotation
         # ROTATION
-        else:
+        elif move_type==0:
             new_pos = self.position
             new_rotation = (self.rotation+move_info) % 4
             new_block = block_shapes.block_order[self.block_type-1][new_rotation]*(self.block_type)
+        # HARD DROP
+        elif move_type==2:
+            #self.hard_drop(grid)
+            #return
+            new_pos=self.hard_drop(grid)
+            new_block=self.block
+            new_rotation=self.rotation
 
         if(self.move_validation(grid,new_pos,new_block)):
             self.position=new_pos
@@ -62,7 +69,7 @@ class Block:
 
         #this part is important because here goes wall kicks
         #...yay
-        elif(move_type==False):
+        elif(move_type==0):
             if self.block_type == 1:
                 wall_kick_offsets=block_shapes.wall_kicks_I[(self.rotation,new_rotation)]
             else:
@@ -76,6 +83,22 @@ class Block:
                     self.rotation = new_rotation
                     self.block    = new_block
                     break
+
+    #lower block till there is nothing left
+    #returns down movement or position, we shall see
+    def hard_drop(self,grid):
+        current_pos=[0,0]
+        test_pos=[0,0]
+        current_pos[0],current_pos[1]=self.position[0],self.position[1]
+        test_pos[0],test_pos[1]=self.position[0],self.position[1]
+        
+        while(self.move_validation(grid,test_pos,self.block)):
+            current_pos[0],current_pos[1]=test_pos[0],test_pos[1]
+            test_pos[0]=test_pos[0]+1
+        #while(self.check_block_under(grid)==False):
+        #    self.update_block_position(1,[1,0],grid)
+        return current_pos
+
 
     #pray for my soul, please
     def move_validation(self,grid,position,block):
