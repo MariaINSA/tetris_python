@@ -14,6 +14,7 @@ class Game_logic:
     def __init__(self,root):
         #create grid
         self.score = 0
+        self.paused = True
         
         self.grid_logic= lgrid.Grid((10,20))   #obligatory size
         self.graphic=ggrid.Grid(root, self.grid_logic)
@@ -42,7 +43,7 @@ class Game_logic:
         # start falling sequence
         self.falling_speed=600
         self.canvas = self.graphic.canvas
-        self.canvas.after(self.falling_speed,self.falling_mov)
+        self.falling_timer = None  #self.canvas.after(self.falling_speed,self.falling_mov)
         
     def falling_mov(self):
         #call for the movement of the block (may add an under flag)
@@ -56,7 +57,7 @@ class Game_logic:
             self.under_timer = self.canvas.after(self.block_delay,self.place_block)
         
         #Restart falling loop
-        self.canvas.after(self.falling_speed, self.falling_mov)
+        self.falling_timer=self.canvas.after(self.falling_speed, self.falling_mov)
     
     def place_block(self):
         self.new_block()
@@ -136,3 +137,17 @@ class Game_logic:
     def update_image(self):
         self.grid_logic.update_shadow(self.block)
         self.graphic.update(self.grid_logic)
+
+    def pause_game(self):
+        if not self.paused:
+            print("Game paused!!!!")
+            self.paused=True
+            if (self.falling_timer!=None):
+                print("cancelling falling timer")
+                self.canvas.after_cancel(self.falling_timer)
+            if (self.under_timer!=None):
+                self.canvas.after_cancel(self.under_timer)
+        else:
+            print("Game unpaused!!!!")
+            self.paused=False
+            self.falling_timer=self.canvas.after(self.falling_speed,self.falling_mov)

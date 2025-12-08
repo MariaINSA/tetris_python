@@ -41,11 +41,11 @@ class Grid:
             for c, val in enumerate(row):
                 if val!=0:
                     #shadow block
-                    self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]=val+7#(self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]%7)+val+7
+                    self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]=val+7 #(self.shadow_grid[shadow_pos[0]+r][shadow_pos[1]+c]%7)+val+7
 
                     #block
-                    self.shadow_grid[pos[0]+r][pos[1]+c]=val#(self.shadow_grid[pos[0]+r][pos[1]+c]%7)+val
-                    
+                    self.shadow_grid[pos[0]+r][pos[1]+c]=val #(self.shadow_grid[pos[0]+r][pos[1]+c]%7)+val
+                
        
     #def update(self,place:list, type:int):
     #    self.grid[place[0]][place[1]]=type
