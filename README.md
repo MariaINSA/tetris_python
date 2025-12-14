@@ -5,6 +5,11 @@ This tetris will follow the srs rotation system, to understand it, this [video](
 
 Also, timings and general guidelines will be taken from the [Tetris Design Guideline](https://dn720004.ca.archive.org/0/items/2009-tetris-variant-concepts_202201/2009%20Tetris%20Design%20Guideline.pdf).
 
+## To do:
+- game mechanic -> monday
+- user mechanic and missing frames -> tuesday
+- documentation and esthetic -> wednesday
+
 ## How to play
 
 ## Code organisation

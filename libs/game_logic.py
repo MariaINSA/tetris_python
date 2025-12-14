@@ -11,24 +11,30 @@ import libs.keyboard_control as kb
 import random as rd
 
 class Game_logic:
-    def __init__(self,root):
+    def __init__(self,graphic):
         #create grid
         self.score = 0
+        self.lines_cleared = 0
+        self.level=0
         self.paused = True
+
+        self.play_screen=graphic
+        self.grid_logic = graphic.lgrid #obligatory size
+        self.graphic = graphic.grid_frame
         
-        self.grid_logic= lgrid.Grid((10,20))   #obligatory size
-        self.graphic=ggrid.Grid(root, self.grid_logic)
 
         #create block list
         self.block_list=[1,2,3,4,5,6,7]
+        self.next_block_list=[1,2,3,4,5,6,7]
         rd.shuffle(self.block_list)
+        rd.shuffle(self.next_block_list)
+
         self.list_position=0
 
         self.current_block=self.block_list[self.list_position]
 
         #create block
         self.block = block.Block(self.current_block)
-        self.k_events = kb.KeyBoard(root,self)
 
         #Time that has to pass on the ground for the block to stick
         self.block_delay=500
@@ -65,7 +71,9 @@ class Game_logic:
         self.block_under=False
         self.locks=0
         #Check for clear lines
-        self.score = self.grid_logic.check_full_lines()
+        lines, score = self.grid_logic.check_full_lines()
+        self.lines_cleared += lines
+        self.score += score
         #show the difference
         self.update_image()
 
@@ -76,7 +84,8 @@ class Game_logic:
         self.list_position=(self.list_position+1)%7
         # reshuffle when restarting the list
         if self.list_position==0:
-            rd.shuffle(self.block_list)
+            self.block_list=self.next_block_list[:]
+            rd.shuffle(self.next_block_list)
 
         self.current_block=self.block_list[self.list_position]
         self.block=block.Block(self.current_block)
@@ -92,9 +101,6 @@ class Game_logic:
             self.canvas.after_cancel(self.under_timer)
             self.block_under=True
             self.locks=self.locks+1
-            #self.under_timer = self.canvas.after(self.block_delay,self.place_block)
-    
-        
 
         if self.locks < 15:
             self.block.update_block_position(move_type,move_info,self.grid_logic.grid)
@@ -103,7 +109,9 @@ class Game_logic:
             self.block_under=False
             self.locks=0
             #Check for clear lines
-            self.score = self.grid_logic.check_full_lines()
+            lines, score = self.grid_logic.check_full_lines()
+            self.lines_cleared += lines
+            self.score += score
 
         if (self.block.check_block_under==True) and (self.block_under):
             self.under_timer = self.canvas.after(self.block_delay,self.place_block)
@@ -116,34 +124,30 @@ class Game_logic:
             self.place_block()
 
     def hold(self):
-        print("trying to hold block")
         if self.hold_state == False : 
             if self.hold_block == 0:
-                print("First hold of game")
                 self.hold_block = self.current_block
                 self.new_block(True)
             else:
-                print("Holding block")
                 self.current_block, self.hold_block = self.hold_block, self.current_block
                 self.block=block.Block(self.current_block)
 
             self.hold_state  = True
             self.block_under = False
             self.locks = 0
-            #self.update_image()
-        else:
-            print("Already held block")
 
     def update_image(self):
         self.grid_logic.update_shadow(self.block)
         self.graphic.update(self.grid_logic)
+        self.play_screen.update_next(self.block_list,self.next_block_list,self.list_position)
+        self.play_screen.update_hold(self.hold_block)
+        self.play_screen.update_text(self.lines_cleared,self.score,self.level)
 
     def pause_game(self):
         if not self.paused:
             print("Game paused!!!!")
             self.paused=True
             if (self.falling_timer!=None):
-                print("cancelling falling timer")
                 self.canvas.after_cancel(self.falling_timer)
             if (self.under_timer!=None):
                 self.canvas.after_cancel(self.under_timer)

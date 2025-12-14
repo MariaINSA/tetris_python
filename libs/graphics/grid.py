@@ -12,8 +12,10 @@ colors = [
             "#999900", "#009900", "#4D004D", "#990000"
         ]
 
-class Grid:
-    def __init__(self, root, lgrid, colors=colors, cell_size=20, padding=2):
+class Grid(tk.Frame):
+    def __init__(self, root, lgrid, colors=colors, cell_size=20, padding=2,*args, **kwargs):
+        super().__init__(root, *args, **kwargs)
+
         cols=len(lgrid.shadow_grid[0])-4
         rows=len(lgrid.shadow_grid)-4
 
@@ -24,7 +26,7 @@ class Grid:
         canvas_width = cols * cell_size + (cols + 1) * padding
         canvas_height = rows * cell_size + (rows + 1) * padding
 
-        self.canvas = tk.Canvas(root,
+        self.canvas = tk.Canvas(self,
                        width=canvas_width,
                        height=canvas_height,
                        highlightthickness=0)
@@ -50,6 +52,8 @@ class Grid:
 
         # Make sure canvas itself doesn't take keyboard focus
         self.canvas.configure(takefocus=0)
+        self.configure(takefocus=0)
+
         return None
         
     def update(self,lgrid):

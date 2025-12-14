@@ -34,35 +34,42 @@ class KeyBoard:
         root.bind("<c>", self.hold_block) #especial move -> has his own function
         root.bind("<Return>", self.pause_game) #especial move -> has his own function
 
-
     def move_left(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(1,[0,-1])
 
     def move_right(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(1,[0,1])
     
     def soft_drop(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(1,[1,0])
 
     def hard_drop(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(2,None)
 
     def rotate_right(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(0,1)
     
     def rotate_left(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(0,-1)
 
     def hold_block(self,event):
+        self.paused=self.game.paused
         if not self.paused:
             self.game.hold()
 
+    ## Aqui hay un problema!!!!!
     def pause_game(self,event):
         self.paused=not self.game.paused
         self.game.pause_game()

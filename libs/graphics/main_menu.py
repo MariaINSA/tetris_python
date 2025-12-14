@@ -8,14 +8,12 @@ class MainMenu(tk.Frame):
         self.controller = controller
 
         #example on how to call the changing window !!!!!!!!
-
-        #button1 = tk.Button(self, text="Go to Page One",
-        #                    command=lambda: controller.show_frame("PageOne"))
         
         title_label = tk.Label(self, text="TETRIS", font=("Arial", 28, "bold"))
         title_label.pack(pady=40)
 
-        btn_play = tk.Button(self, text="Play", font=("Arial", 14), width=15, command=self.start_game)
+        #WHY LAMBDA???????
+        btn_play = tk.Button(self, text="Play", font=("Arial", 14), width=15, command= lambda:controller.show_frame("PlayScreen"))
         btn_play.pack(pady=10)
 
         btn_scores = tk.Button(self, text="High Scores", font=("Arial", 14), width=15, command=self.show_high_scores)

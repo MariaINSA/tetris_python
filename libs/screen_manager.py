@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import font as tkfont  # python 3
 import libs.graphics.main_menu as main_menu
+import libs.graphics.play_screen as play_screen
+
+import libs.graphics.grid as ggrid
+import libs.logic.grid as lgrid
 
 class ScreenManager(tk.Tk):
 
@@ -14,7 +18,7 @@ class ScreenManager(tk.Tk):
         # will be raised above the others
         # --- Ventana principal ---
 
-        self.geometry("300x400")
+        self.geometry("500x465")
         self.resizable(False, False)
 
         container = tk.Frame(self)
@@ -26,12 +30,10 @@ class ScreenManager(tk.Tk):
         self.frames = {}
 
         self.frames["MainMenu"] = main_menu.MainMenu(parent=container, controller=self)
-        #self.frames["PageOne"] = PageOne(parent=container, controller=self)
-        #self.frames["PageTwo"] = PageTwo(parent=container, controller=self)
+        self.frames["PlayScreen"] = play_screen.PlayScreen(parent=container, controller=self)
 
         self.frames["MainMenu"].grid(row=0, column=0, sticky="nsew")
-        #self.frames["PageOne"].grid(row=0, column=0, sticky="nsew")
-        #self.frames["PageTwo"].grid(row=0, column=0, sticky="nsew")
+        self.frames["PlayScreen"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("MainMenu")
 
@@ -39,4 +41,6 @@ class ScreenManager(tk.Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         #We just raise frames one over the other
+        if page_name=="PlayScreen":
+            self.frames[page_name].game.pause_game()
         frame.tkraise()
