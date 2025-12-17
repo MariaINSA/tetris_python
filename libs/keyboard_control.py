@@ -66,14 +66,18 @@ class KeyBoard:
             self.game.hold()
 
     def start_soft_drop(self, event):
-        self.game.start_soft_drop()
+        self.paused=self.game.paused
+        if not self.paused:
+            self.game.start_soft_drop()
 
     def stop_soft_drop(self, event):
-        self.game.end_soft_drop()
+        self.paused=self.game.paused
+        if not self.paused:
+            self.game.end_soft_drop()
 
-    ## Aqui hay un problema!!!!!
     def pause_game(self,event):
-        self.paused=not self.game.paused
-        self.game.pause_game()
+        if self.game.game==True:
+            self.paused=not self.game.paused
+            self.game.pause_game()
 
 

@@ -40,6 +40,7 @@ class Game_logic:
         self.lines_cleared = 0
         self.level = 1
         self.paused = True #start with paused game
+        self.game = 0
         self.btb = False
 
         rd.shuffle(self.block_list)
@@ -64,7 +65,15 @@ class Game_logic:
         self.soft_drop = False
         self.falling_timer = None
         
+    def start_falling_timer(self):
+        if self.falling_timer is not None:
+            self.canvas.after_cancel(self.falling_timer)
+        self.falling_timer = self.canvas.after(self.falling_speed, self.falling_mov)
+
     def falling_mov(self):
+        if self.paused or not self.game:
+            return
+
         # call for the movement of the block (may add an under flag)
         # check if something is under the block
         # if so start stop protocol
@@ -79,9 +88,14 @@ class Game_logic:
             self.score+=1
         
         #Restart falling loop
-        self.falling_timer=self.canvas.after(self.falling_speed, self.falling_mov)
-    
+        self.start_falling_timer()
+ 
     def place_block(self):
+        #restarting timer
+        if self.falling_timer is not None:
+            self.canvas.after_cancel(self.falling_timer)
+            self.falling_timer = None
+
         self.new_block()
         self.hold_state = False
         self.block_under=False
@@ -108,7 +122,8 @@ class Game_logic:
         self.block.re_init(self.current_block)  #block.Block(self.current_block)
         if self.block.check_game_over(self.grid_logic.grid):
             self.game_over()
-    
+        self.start_falling_timer()
+
     def update_game(self,move_type,move_info): ##HAY QUE ORGANIZAR ESTO
         """
         Move type goes 1 for translation and 0 for rotation, 2 for hard drop
@@ -126,6 +141,7 @@ class Game_logic:
             self.new_block()
             self.block_under=False
             self.locks=0
+            self.hold_state=False
             #Check for clear lines
             lines = self.grid_logic.check_full_lines()
             self.lines_cleared += lines
@@ -166,6 +182,7 @@ class Game_logic:
     def end_soft_drop(self):
         self.soft_drop=False
         self.falling_speed=speeds[self.level-1]
+        self.start_falling_timer()
 
     def hold(self):
         if self.hold_state == False : 
@@ -201,10 +218,17 @@ class Game_logic:
                 self.canvas.after_cancel(self.falling_timer)
             if (self.under_timer!=None):
                 self.canvas.after_cancel(self.under_timer)
+
+            if self.game:
+                self.play_screen.open_new_screen("PauseMenu")
+            else:
+                self.play_screen.open_new_screen("GameOverMenu")
+            
         else:
             print("Game unpaused!!!!")
             self.paused=False
-            self.falling_timer=self.canvas.after(self.falling_speed,self.falling_mov)
+            self.start_falling_timer()
+            #self.falling_timer=self.canvas.after(self.falling_speed,self.falling_mov)
 
     def next_level(self):
         #this is the fixed goal system
@@ -218,16 +242,28 @@ class Game_logic:
             self.falling_speed = speeds[self.level - 1]
 
     def game_over(self):
+        self.game=False
         #cancel timers
         self.pause_game()
+        self.save_game()
 
         #re-initialise internal values
+        #when we do this we do game=false
         self.init_game()
         # clear grid
         self.grid_logic.delete()
         self.grid_logic.update_grid()
         self.block.re_init(self.current_block)  #block.Block(self.current_block)
-        #self.new_block()
 
         # clear reupdate the graphic part
         self.update_image()
+
+    def start_game(self):
+        self.game=True
+        self.pause_game()
+
+    def save_game(self):
+        file = open("scores.txt", "a")  # append mode
+        L = str(self.level) +","+str(self.score)+","+str(self.lines_cleared)+"\n"
+        file.write(L)
+        file.close()

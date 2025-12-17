@@ -94,7 +94,8 @@ class PlayScreen(tk.Frame):
         self.lines_var.set(lines)
         self.level_var.set(level)
 
-    
+    def open_new_screen(self,screen):
+        self.controller.show_frame(screen)
 
-
-
+    def game_over_int(self):
+        self.game.game_over()
