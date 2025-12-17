@@ -41,14 +41,21 @@ class Block:
         self.block_type = type
         self.rotation=0
         self.block= block_shapes.block_order[self.block_type-1][self.rotation]*(self.block_type)
-        self.position=np.array([0,5]) # spawning location 
+        self.position=np.array([0,5]) # spawning location
+
+    def re_init(self, type):
+        self.block_type = type
+        self.rotation=0
+        self.block= block_shapes.block_order[self.block_type-1][self.rotation]*(self.block_type)
+        self.position=np.array([0,5]) # spawning location
 
     def update_block_position(self,move_type,move_info,grid):
         # TRASLATION
+        lines_dropped=0
         if move_type==1:
             new_pos = self.position + np.array(move_info)
-            new_block=self.block
-            new_rotation=self.rotation
+            new_block = self.block
+            new_rotation = self.rotation
         # ROTATION
         elif move_type==0:
             new_pos = self.position
@@ -56,9 +63,8 @@ class Block:
             new_block = block_shapes.block_order[self.block_type-1][new_rotation]*(self.block_type)
         # HARD DROP
         elif move_type==2:
-            #self.hard_drop(grid)
-            #return
             new_pos=self.hard_drop(grid)
+            lines_dropped=new_pos[0]-self.position[0]
             new_block=self.block
             new_rotation=self.rotation
 
@@ -66,7 +72,6 @@ class Block:
             self.position=new_pos
             self.rotation=new_rotation
             self.block=new_block
-
         #this part is important because here goes wall kicks
         #...yay
         elif(move_type==0):
@@ -84,6 +89,8 @@ class Block:
                     self.block    = new_block
                     break
 
+        return lines_dropped
+
     #lower block till there is nothing left
     #returns down movement or position, we shall see
     def hard_drop(self,grid):
@@ -99,7 +106,6 @@ class Block:
         #    self.update_block_position(1,[1,0],grid)
         return current_pos
 
-
     #pray for my soul, please
     def move_validation(self,grid,position,block):
         max_row = len(grid) - 2
@@ -114,10 +120,35 @@ class Block:
                     
                     #check if colliding
                     if(grid[position[0]+r][position[1]+c] != 0):
-                        #print("collision with grid")
+                        print("collision with grid")
                         return False
         return True
     
+    def check_game_over(self,grid):
+        #check if there is anything in the same place that it is
+        #(this is just for the "init")
+        #check if is is blocked fully over the skyline
+        out_bounds=0
+        for r, row in enumerate(self.block):
+            for c, val in enumerate(row):
+                if val!=0:
+                    #check if colliding on init
+                    if(grid[self.position[0]+r][self.position[1]+c] != 0):
+                        print("collision with initial block")
+                        return True
+                    
+                    #check if blocked fully out of bounds
+                    if(self.position[1]+c < 2):
+                        out_bounds=out_bounds+1
+                    else:
+                        out_bounds=out_bounds*0
+
+                    if out_bounds!=0:
+                        print("blocked out of bounds")
+                        return False
+                    
+        return False
+
     def check_block_under(self, grid):
         max_row = len(grid) - 2
         #We have to check all cells
@@ -132,10 +163,3 @@ class Block:
                     if(grid[self.position[0]+r+1][self.position[1]+c] != 0):
                         return True
         return False
-
-
-                    
-
-
-
-

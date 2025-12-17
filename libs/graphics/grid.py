@@ -10,7 +10,7 @@ colors = [
             "#FFFF00","#00FF00", "#800080","#FF0000",
             "#009999", "#000099", "#995200",
             "#999900", "#009900", "#4D004D", "#990000"
-        ]
+        ] 
 
 class Grid(tk.Frame):
     def __init__(self, root, lgrid, colors=colors, cell_size=20, padding=2,*args, **kwargs):

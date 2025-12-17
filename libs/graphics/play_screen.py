@@ -90,9 +90,11 @@ class PlayScreen(tk.Frame):
                 self.next_canvases[i].update(next_list2[i+position-7]-1)
 
     def update_text(self,lines,score,level):
-        self.score_var.set(lines)
-        self.lines_var.set(score)
+        self.score_var.set(score)
+        self.lines_var.set(lines)
         self.level_var.set(level)
+
+    
 
 
 

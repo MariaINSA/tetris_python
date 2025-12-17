@@ -27,7 +27,8 @@ class KeyBoard:
         self.paused=game.paused
         root.bind("<Left>", self.move_left) #type 1 move
         root.bind("<Right>", self.move_right) #type 1 move
-        root.bind("<Down>", self.soft_drop) #type 1 move -> soft drop
+        root.bind("<KeyPress-Down>", self.start_soft_drop)
+        root.bind("<KeyRelease-Down>", self.stop_soft_drop)
         root.bind("<space>", self.hard_drop) #type 1 move -> hard drop (CHECK)
         root.bind("<z>", self.rotate_right) #type 2 move
         root.bind("<x>", self.rotate_left) #type 2 move
@@ -43,11 +44,6 @@ class KeyBoard:
         self.paused=self.game.paused
         if not self.paused:
             self.game.update_game(1,[0,1])
-    
-    def soft_drop(self,event):
-        self.paused=self.game.paused
-        if not self.paused:
-            self.game.update_game(1,[1,0])
 
     def hard_drop(self,event):
         self.paused=self.game.paused
@@ -68,6 +64,12 @@ class KeyBoard:
         self.paused=self.game.paused
         if not self.paused:
             self.game.hold()
+
+    def start_soft_drop(self, event):
+        self.game.start_soft_drop()
+
+    def stop_soft_drop(self, event):
+        self.game.end_soft_drop()
 
     ## Aqui hay un problema!!!!!
     def pause_game(self,event):

@@ -46,7 +46,6 @@ class Grid:
                     #block
                     self.shadow_grid[pos[0]+r][pos[1]+c]=val #(self.shadow_grid[pos[0]+r][pos[1]+c]%7)+val
                 
-    
     def update_grid(self):
         for r,row in enumerate(self.shadow_grid):
             for c, val in enumerate(row):
@@ -65,7 +64,7 @@ class Grid:
 
         if (len(full_lines)!=0):
             self.clear_full_lines(full_lines)
-        return len(full_lines),len(full_lines)*100
+        return len(full_lines)
     
     def clear_full_lines(self,full_lines):
         for r in full_lines:
@@ -75,4 +74,5 @@ class Grid:
                 r=r-1
     
     def delete(self):
-        self.grid= [[0 for _ in range(self.cols)] for _ in range(self.rows)]
+        self.grid = np.zeros((self.rows,self.cols),int)
+        self.shadow_grid = np.zeros((self.rows,self.cols),int)
