@@ -3,6 +3,7 @@ from tkinter import font as tkfont  # python 3
 import libs.graphics.main_menu as main_menu
 import libs.graphics.play_screen as play_screen
 import libs.graphics.middle_menu as middle_menu
+import libs.graphics.high_scores as high_scores
 
 import libs.graphics.grid as ggrid
 import libs.logic.grid as lgrid
@@ -34,11 +35,13 @@ class ScreenManager(tk.Tk):
         self.frames["PlayScreen"] = play_screen.PlayScreen(parent=container, controller=self)
         self.frames["PauseMenu"] = middle_menu.MiddleMenu(parent=container, controller=self,pause=True)
         self.frames["GameOverMenu"] = middle_menu.MiddleMenu(parent=container, controller=self,pause=False)
+        self.frames["HighScores"] = high_scores.HighScores(parent=container, controller=self)
 
         self.frames["MainMenu"].grid(row=0, column=0, sticky="nsew")
         self.frames["PlayScreen"].grid(row=0, column=0, sticky="nsew")
         self.frames["PauseMenu"].grid(row=0, column=0, sticky="nsew")
         self.frames["GameOverMenu"].grid(row=0, column=0, sticky="nsew")
+        self.frames["HighScores"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("MainMenu")
     
@@ -46,11 +49,12 @@ class ScreenManager(tk.Tk):
         #intermediary function for calling game over from the pause menu
         self.frames["PlayScreen"].game_over_int()
 
-
-    def show_frame(self, page_name):
+    def show_frame(self, page_name,name=None):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         #We just raise frames one over the other
         if page_name=="PlayScreen":
-            self.frames[page_name].game.start_game()
+            self.frames[page_name].game.start_game(name)
+        if page_name=="HighScores":
+            self.frames[page_name].load_and_display_scores()
         frame.tkraise()

@@ -1,37 +1,39 @@
 import tkinter as tk
 from tkinter import messagebox
+import libs.graphics.name_input as name_input
+from tkinter.font import Font
 
 class MainMenu(tk.Frame):
     def __init__(self, parent, controller):
-    #def __init__(self,root):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        #example on how to call the changing window !!!!!!!!
-        
-        title_label = tk.Label(self, text="TETRIS", font=("Arial", 28, "bold"))
-        title_label.pack(pady=40)
+        bg_im = tk.PhotoImage(file = "content/bg_main.png")
+        bg_label = tk.Label(self, image=bg_im)
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+        # Keep a reference
+        bg_label.image = bg_im
+
+        title_label = tk.Label(self, text="TETRIS", bg="#0b316f",font=("Arial", 28, "bold"),fg="#FFFFFF")
+        title_label.pack(pady=30)
 
         #WHY LAMBDA???????
-        btn_play = tk.Button(self, text="Play", font=("Arial", 14), width=15, command= lambda:controller.show_frame("PlayScreen"))
-        btn_play.pack(pady=10)
+        btn_play = tk.Button(self, text="Play", font=("Arial", 14), width=15,fg="#1E1E2F", command=self.start_game)
+        btn_play.pack(pady=20)
 
-        btn_scores = tk.Button(self, text="High Scores", font=("Arial", 14), width=15, command=self.show_high_scores)
-        btn_scores.pack(pady=10)
+        btn_scores = tk.Button(self, text="High Scores", font=("Arial", 14),fg="#1E1E2F", width=15, command=lambda:controller.show_frame("HighScores"))
+        btn_scores.pack(pady=20)
 
-        btn_options = tk.Button(self, text="Options", font=("Arial", 14), width=15, command=self.open_options)
-        btn_options.pack(pady=10)
-
-        btn_quit = tk.Button(self, text="Quit", font=("Arial", 14), width=15, command=self.controller.quit)
+        btn_quit = tk.Button(self, text="Quit", font=("Arial", 14),fg="#1E1E2F", width=15, command=self.controller.quit)
         btn_quit.pack(pady=20)
 
     def start_game(self):
-        # Aquí iría tu lógica para iniciar el juego Tetris
-        messagebox.showinfo("Play", "Click here to start the game.")
-
-    def show_high_scores(self):
-        # Aquí podrías abrir una nueva ventana o mostrar datos reales
-        messagebox.showinfo("High Scores", "No high scores yet.")
+        dialog = name_input.NameDialog(self)
+        player_name = dialog.result
+        if player_name:
+            #messagebox.showinfo("Welcome", f"Starting game for {player_name}")
+            self.controller.show_frame("PlayScreen",player_name)
+            # Aquí iría tu lógica para iniciar el juego Tetris
 
     def open_options(self):
         # Ventana simple de opciones

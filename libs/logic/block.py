@@ -120,33 +120,28 @@ class Block:
                     
                     #check if colliding
                     if(grid[position[0]+r][position[1]+c] != 0):
-                        print("collision with grid")
                         return False
         return True
     
-    def check_game_over(self,grid):
+    def check_game_over(self,grid,start=True):
         #check if there is anything in the same place that it is
         #(this is just for the "init")
         #check if is is blocked fully over the skyline
-        out_bounds=0
+        in_bounds=False
+
         for r, row in enumerate(self.block):
             for c, val in enumerate(row):
                 if val!=0:
                     #check if colliding on init
                     if(grid[self.position[0]+r][self.position[1]+c] != 0):
-                        print("collision with initial block")
                         return True
-                    
-                    #check if blocked fully out of bounds
-                    if(self.position[1]+c < 2):
-                        out_bounds=out_bounds+1
-                    else:
-                        out_bounds=out_bounds*0
 
-                    if out_bounds!=0:
-                        print("blocked out of bounds")
-                        return False
-                    
+                    if self.position[0]+r >= 2:
+                        in_bounds = True
+        
+        if not in_bounds and not start:
+            return True
+        
         return False
 
     def check_block_under(self, grid):

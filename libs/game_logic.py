@@ -31,6 +31,9 @@ class Game_logic:
         self.current_block = self.block_list[self.list_position]
         self.block = block.Block(self.current_block)
 
+        #this is here to prevent name erasing when losing and trying again
+        self.name=""
+
         # get the values to the reset state 
         self.init_game()
 
@@ -91,6 +94,9 @@ class Game_logic:
         self.start_falling_timer()
  
     def place_block(self):
+        if self.block.check_game_over(self.grid_logic.grid,False):
+            self.game_over()
+
         #restarting timer
         if self.falling_timer is not None:
             self.canvas.after_cancel(self.falling_timer)
@@ -159,7 +165,7 @@ class Game_logic:
             if self.under_timer!=None:
                 self.canvas.after_cancel(self.under_timer)
             self.place_block()
-
+        
     def get_score(self,lines):
         scores=(0,100,300,500,800)
         total= scores[lines]*self.level
@@ -208,11 +214,10 @@ class Game_logic:
         self.graphic.update(self.grid_logic)
         self.play_screen.update_next(self.block_list,self.next_block_list,self.list_position)
         self.play_screen.update_hold(self.hold_block)
-        self.play_screen.update_text(self.lines_cleared,self.score,self.level)
+        self.play_screen.update_text(self.lines_cleared,self.score,self.level,self.name)
 
     def pause_game(self):
         if not self.paused:
-            print("Game paused!!!!")
             self.paused=True
             if (self.falling_timer!=None):
                 self.canvas.after_cancel(self.falling_timer)
@@ -225,10 +230,8 @@ class Game_logic:
                 self.play_screen.open_new_screen("GameOverMenu")
             
         else:
-            print("Game unpaused!!!!")
             self.paused=False
             self.start_falling_timer()
-            #self.falling_timer=self.canvas.after(self.falling_speed,self.falling_mov)
 
     def next_level(self):
         #this is the fixed goal system
@@ -258,12 +261,15 @@ class Game_logic:
         # clear reupdate the graphic part
         self.update_image()
 
-    def start_game(self):
+    def start_game(self,name):
         self.game=True
+        if name is not None: 
+            self.name=name
         self.pause_game()
+        self.update_image()
 
     def save_game(self):
         file = open("scores.txt", "a")  # append mode
-        L = str(self.level) +","+str(self.score)+","+str(self.lines_cleared)+"\n"
+        L = self.name+","+str(self.level) +","+str(self.score)+","+str(self.lines_cleared)+"\n"
         file.write(L)
         file.close()

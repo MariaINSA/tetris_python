@@ -18,25 +18,28 @@ class PlayScreen(tk.Frame):
         left_frame.grid(row=0, column=0, sticky="ns", padx=10)
 
         # HOLD section -> SEE IF A CLASS COULD HELP
-        tk.Label(left_frame, text="HOLD", font=("Arial", 14, "bold")).pack(pady=(0, 5))
+        tk.Label(left_frame, text="HOLD", font=("Arial", 14, "bold")).pack(pady=(15, 5))
         self.hold_canvas=block.Block(left_frame)
-        self.hold_canvas.pack(pady=(0, 20))
+        self.hold_canvas.pack(pady=(5, 10))
 
         # Score/Stats
         stats_frame = tk.Frame(left_frame)
-        stats_frame.pack(pady=10)
+        stats_frame.pack(pady=5)
+        
+        self.name_var = tk.StringVar(value="Name")
+        tk.Label(stats_frame, textvariable=self.name_var, font=("Arial", 14)).grid(row=0, column=0, sticky="w")
 
-        tk.Label(stats_frame, text="Score:", font=("Arial", 12)).grid(row=0, column=0, sticky="w")
+        tk.Label(stats_frame, text="Score:", font=("Arial", 12)).grid(row=1, column=0, sticky="w")
         self.score_var = tk.StringVar(value="0")
-        tk.Label(stats_frame, textvariable=self.score_var).grid(row=0, column=1, sticky="e")
+        tk.Label(stats_frame, textvariable=self.score_var).grid(row=1, column=1, sticky="e")
 
-        tk.Label(stats_frame, text="Lines:", font=("Arial", 12)).grid(row=1, column=0, sticky="w")
+        tk.Label(stats_frame, text="Lines:", font=("Arial", 12)).grid(row=2, column=0, sticky="w")
         self.lines_var = tk.StringVar(value="0")
-        tk.Label(stats_frame, textvariable=self.lines_var).grid(row=1, column=1, sticky="e")
+        tk.Label(stats_frame, textvariable=self.lines_var).grid(row=2, column=1, sticky="e")
 
-        tk.Label(stats_frame, text="Level:", font=("Arial", 12)).grid(row=2, column=0, sticky="w")
+        tk.Label(stats_frame, text="Level:", font=("Arial", 12)).grid(row=3, column=0, sticky="w")
         self.level_var = tk.StringVar(value="1")
-        tk.Label(stats_frame, textvariable=self.level_var).grid(row=2, column=1, sticky="e")
+        tk.Label(stats_frame, textvariable=self.level_var).grid(row=3, column=1, sticky="e")
 
 
         # -------------------------
@@ -55,7 +58,7 @@ class PlayScreen(tk.Frame):
         right_frame = tk.Frame(self)
         right_frame.grid(row=0, column=2, sticky="ns", padx=10)
 
-        tk.Label(right_frame, text="NEXT", font=("Arial", 14, "bold")).pack(pady=(0, 5))
+        tk.Label(right_frame, text="NEXT", font=("Arial", 14, "bold")).pack(pady=15)
 
         # Create queue canvases for next pieces (e.g., 5 visible upcoming)
         self.next_canvases = []
@@ -89,7 +92,8 @@ class PlayScreen(tk.Frame):
             else:
                 self.next_canvases[i].update(next_list2[i+position-7]-1)
 
-    def update_text(self,lines,score,level):
+    def update_text(self,lines,score,level,name):
+        self.name_var.set(name)
         self.score_var.set(score)
         self.lines_var.set(lines)
         self.level_var.set(level)
