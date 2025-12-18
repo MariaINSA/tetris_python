@@ -195,7 +195,7 @@ La classe NameDialog est une boîte de dialogue modale qui permet au joueur de s
 - validate() : vérifie que le nom est alphanumérique et de 1 à 7 caractères, puis ferme la fenêtre
 - cancel() : ferme la boîte de dialogue sans enregistrer le nom
 
-#### **__2.8. PlayScreen:__**
+#### **__2.9. PlayScreen:__**
 La classe PlayScreen représente l’écran principal du jeu Tetris. Elle affiche la grille de jeu, la pièce en hold, la file des prochaines pièces, et les statistiques du joueur (score, lignes, niveau, nom).
 
 **__Attributs:__**
