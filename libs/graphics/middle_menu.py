@@ -2,7 +2,25 @@ import tkinter as tk
 from tkinter import messagebox
 
 class MiddleMenu(tk.Frame):
+    """
+    Display an intermediate menu during pause or game over.
+
+    The menu shows a title and buttons to resume/retry or go back
+    to the main menu.
+    """
     def __init__(self, parent, controller,pause):
+        """
+        Initialize the intermediate menu.
+
+        Parameters
+        ----------
+        parent : tk.Widget
+            Parent container.
+        controller : ScreenManager
+            Controller to switch screens.
+        pause : bool
+            True if this is a pause menu, False if game over menu.
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -30,6 +48,11 @@ class MiddleMenu(tk.Frame):
         btn_quit.pack(pady=20)
 
     def quit_to_menu(self):
+        """
+        Return to the main menu.
+
+        If the menu was a pause menu, trigger game over in the controller.
+        """
         if self.pause:
             #see if its paused so that if were quitting to menu it saves and restarts
             self.controller.game_over()

@@ -10,12 +10,31 @@ colors = [
 
 class Block(tk.Frame):
     """
-    Displays a single Tetris-like piece centered in a canvas.
+        A Tkinter widget that displays a single Tetris piece centered inside a canvas.
+
+        The piece is rendered using a matrix representation and drawn
+        with colored rectangles corresponding to occupied cells.
     """
 
     def __init__(self, parent, canvas_size=80,
                  cell_size=18, padding=2,
                  colors=colors, *args, **kwargs):
+        """
+        Initialize the Block widget.
+
+        Parameters
+        ----------
+        parent : tk.Widget
+            Parent Tkinter widget.
+        canvas_size : int, optional
+            Width of the canvas in pixels (default is 80).
+        cell_size : int, optional
+            Size of each block cell in pixels (default is 18).
+        padding : int, optional
+            Padding inside each cell to create spacing (default is 2).
+        colors : list of str, optional
+            List of hexadecimal color strings for blocks.
+        """
 
         super().__init__(parent, *args, **kwargs)
 
@@ -38,13 +57,27 @@ class Block(tk.Frame):
         self.blocks = []
 
     def clear(self):
+        """
+        Remove all currently drawn block cells from the canvas.
+        """
         for block in self.blocks:
             self.canvas.delete(block)
         self.blocks.clear()
 
     def update(self, block_number):
         """
-        piece_matrix: 2D list containing 0 for empty and >0 for color index
+        Render a new Tetris piece in the canvas.
+
+        Parameters
+        ----------
+        block_number : int
+            Index of the block shape to display, corresponding to
+            the block order and color list.
+
+        Notes
+        -----
+        The piece is centered in the canvas and only occupied cells
+        are drawn.
         """
         self.clear()
         piece=shapes.block_order[block_number][0]

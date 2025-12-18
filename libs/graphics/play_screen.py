@@ -7,7 +7,20 @@ import libs.graphics.block as block
 import libs.keyboard_control as kb
 
 class PlayScreen(tk.Frame):
+    """
+    Main game screen displaying the Tetris grid, next queue, hold piece, and game stats.
+    """
     def __init__(self, parent, controller):
+        """
+        Initialize the Tetris play screen.
+
+        Parameters
+        ----------
+        parent : tk.Widget
+            Parent container.
+        controller : ScreenManager
+            Controller for switching screens.
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -79,11 +92,31 @@ class PlayScreen(tk.Frame):
         self.k_events = kb.KeyBoard(controller,self.game)
 
     def update_hold(self,block):
+        """
+        Update the hold piece display.
+
+        Parameters
+        ----------
+        block : int
+            Index of the block to display in hold.
+        """
         if block!=0:
             #CHECK Y I NEED THE -1
             self.hold_canvas.update(block-1)
 
     def update_next(self,next_list1,next_list2,position):
+        """
+        Update the next block queue display.
+
+        Parameters
+        ----------
+        next_list1 : list of int
+            First list of upcoming blocks.
+        next_list2 : list of int
+            Second list of upcoming blocks (used when the queue wraps around).
+        position : int
+            Current position in the queue.
+        """
         position+=1
         for i in range(5):
             # this does not need the -1 because we do not need the current position on display
@@ -93,13 +126,38 @@ class PlayScreen(tk.Frame):
                 self.next_canvases[i].update(next_list2[i+position-7]-1)
 
     def update_text(self,lines,score,level,name):
+        """
+        Update the game stats labels: player name, score, lines, level.
+
+        Parameters
+        ----------
+        lines : int
+            Number of lines cleared.
+        score : int
+            Current score.
+        level : int
+            Current level.
+        name : str
+            Player's name.
+        """
         self.name_var.set(name)
         self.score_var.set(score)
         self.lines_var.set(lines)
         self.level_var.set(level)
 
     def open_new_screen(self,screen):
+        """
+        Request the controller to show a different screen.
+
+        Parameters
+        ----------
+        screen : str
+            Name of the screen to show.
+        """
         self.controller.show_frame(screen)
 
     def game_over_int(self):
+        """
+        Trigger the game over routine in the game logic.
+        """
         self.game.game_over()

@@ -9,8 +9,18 @@ import libs.graphics.grid as ggrid
 import libs.logic.grid as lgrid
 
 class ScreenManager(tk.Tk):
+    """
+    Main application window and screen controller.
+
+    This class manages all application screens (menus, game screen,
+    pause menu, high scores) and handles navigation between them.
+    """
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the main application window and all screens.
+        """
+        
         tk.Tk.__init__(self, *args, **kwargs) #this means self = root
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
@@ -46,11 +56,23 @@ class ScreenManager(tk.Tk):
         self.show_frame("MainMenu")
     
     def game_over(self):
+        """
+        Trigger a game over from external screens (e.g. pause menu).
+        """
         #intermediary function for calling game over from the pause menu
         self.frames["PlayScreen"].game_over_int()
 
     def show_frame(self, page_name,name=None):
-        '''Show a frame for the given page name'''
+        """
+        Display the selected screen and perform required setup.
+
+        Parameters
+        ----------
+        page_name : str
+            Name of the screen to display.
+        name : str, optional
+            Player name, used when starting a new game.
+        """
         frame = self.frames[page_name]
         #We just raise frames one over the other
         if page_name=="PlayScreen":

@@ -2,7 +2,18 @@ import tkinter as tk
 from tkinter import messagebox
 
 class NameDialog(tk.Toplevel):
+    """
+    Modal dialog for entering the player's name.
+    """
     def __init__(self, parent):
+        """
+        Initialize the name input dialog.
+
+        Parameters
+        ----------
+        parent : tk.Widget
+            Parent window to center the dialog over.
+        """
         super().__init__(parent)
         self.title("Enter Name")
         self.resizable(False, False)
@@ -33,6 +44,14 @@ class NameDialog(tk.Toplevel):
         self.wait_window(self)
 
     def center_window(self, parent):
+        """
+        Center the dialog over the parent window.
+
+        Parameters
+        ----------
+        parent : tk.Widget
+            Parent window for positioning.
+        """
         self.update_idletasks()
 
         parent_x = parent.winfo_rootx()
@@ -50,6 +69,13 @@ class NameDialog(tk.Toplevel):
 
 
     def validate(self):
+        """
+        Validate the entered name.
+
+        Ensures the name is alphanumeric and between 1 and 7 characters.
+        If valid, stores it in `self.result` and closes the dialog.
+        """
+
         name = self.entry.get()
 
         if not name.isalnum():
@@ -64,4 +90,7 @@ class NameDialog(tk.Toplevel):
         self.destroy()
 
     def cancel(self):
+        """
+        Cancel name entry and close the dialog without storing a result.
+        """
         self.destroy()

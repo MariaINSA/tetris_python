@@ -8,21 +8,23 @@ All types of movements:
 
 class KeyBoard:
     """
-    A class used to manage keyboard events
-    ...
+    Handles keyboard input for controlling the Tetris game.
 
-    Attributes
-    ----------
-    keys : list of movement keys
-        (left, right, soft_drop, rot_left, rot_right, double_rut, hard_drop) game keys
-
-    Methods
-    -------
-    says(sound=None) EXAMPLE METHOD
-        Prints the animals name and what sound it makes
+    This class binds keys to movement, rotation, hold, soft drop,
+    hard drop, and pause actions.
     """
      
-    def __init__(self,root,game,keys=("<Left>","<Right>","<Down>","<Up>")):
+    def __init__(self,root,game):
+        """
+        Initialize the keyboard controller and bind all relevant keys.
+
+        Parameters
+        ----------
+        root : tk.Widget
+            Root Tkinter widget to bind key events to.
+        game : Game_logic
+            Reference to the game logic.
+        """
         self.game=game
         self.paused=game.paused
         root.bind("<Left>", self.move_left) #type 1 move

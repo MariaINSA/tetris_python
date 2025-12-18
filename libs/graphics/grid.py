@@ -13,7 +13,30 @@ colors = [
         ] 
 
 class Grid(tk.Frame):
+    """
+    A Tkinter widget that displays the main Tetris grid.
+
+    The grid is rendered using a canvas filled with colored rectangles,
+    each representing a cell of the game board.
+    """
+
     def __init__(self, root, lgrid, colors=colors, cell_size=20, padding=2,*args, **kwargs):
+        """
+        Initialize the Grid widget.
+
+        Parameters
+        ----------
+        root : tk.Widget
+            Parent Tkinter widget.
+        lgrid : object
+            Logic grid object containing the shadow_grid matrix.
+        colors : list of str, optional
+            List of hexadecimal color strings used for rendering cells.
+        cell_size : int, optional
+            Size of each grid cell in pixels (default is 20).
+        padding : int, optional
+            Spacing between grid cells in pixels (default is 2).
+        """
         super().__init__(root, *args, **kwargs)
 
         cols=len(lgrid.shadow_grid[0])-4
@@ -57,6 +80,14 @@ class Grid(tk.Frame):
         return None
         
     def update(self,lgrid):
+        """
+        Update the grid display using the current state of the logic grid.
+
+        Parameters
+        ----------
+        lgrid : object
+            Logic grid object containing the updated shadow_grid matrix.
+        """
         cols=len(lgrid.shadow_grid[0])-4
         rows=len(lgrid.shadow_grid)-4
 

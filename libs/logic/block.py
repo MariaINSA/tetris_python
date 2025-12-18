@@ -15,41 +15,57 @@ import libs.logic.block_shapes as block_shapes
 
 class Block:
     """
-    A class used to represent a falling block
-    ...
+    Represents a falling Tetris block and handles its movement,
+    rotation, collision detection, and validation.
 
-    Attributes
-    ----------
-    position : list
-        (x,y) position on the grid
-    speed : int
-        speed of the falling block (should this be here???)
-    type : int
-        type of the block (1 to 7)
-    color : str
-        color of the block???? -> to be seen -> possibly on graphics interface
-    num_legs : int
-        the number of legs the animal has (default 4)
-
-    Methods
-    -------
-    says(sound=None)
-        Prints the animals name and what sound it makes
+    The block uses matrix representations defined in block_shapes
+    and follows the Super Rotation System (SRS) with wall kicks.
     """
+
      
     def __init__(self, type):
-        self.block_type = type
-        self.rotation=0
-        self.block= block_shapes.block_order[self.block_type-1][self.rotation]*(self.block_type)
-        self.position=np.array([0,5]) # spawning location
+        """
+        Create a new block of a given type.
+
+        Parameters
+        ----------
+        type : int
+            Block type (1 to 7 corresponding to I, J, L, O, S, T, Z).
+        """
+        self.re_init(type)
 
     def re_init(self, type):
+        """
+        Reinitialize the block with a new type.
+
+        Parameters
+        ----------
+        type : int
+            New block type (1 to 7).
+        """
         self.block_type = type
         self.rotation=0
         self.block= block_shapes.block_order[self.block_type-1][self.rotation]*(self.block_type)
         self.position=np.array([0,5]) # spawning location
 
     def update_block_position(self,move_type,move_info,grid):
+        """
+        Update the block position based on movement type.
+
+        Parameters
+        ----------
+        move_type : int
+            Movement type (1 = translation, 0 = rotation, 2 = hard drop).
+        move_info : list or int
+            Movement or rotation information.
+        grid : list of lists
+            Current logic grid.
+
+        Returns
+        -------
+        int
+            Number of lines dropped during a hard drop.
+        """
         # TRASLATION
         lines_dropped=0
         if move_type==1:
@@ -94,6 +110,19 @@ class Block:
     #lower block till there is nothing left
     #returns down movement or position, we shall see
     def hard_drop(self,grid):
+        """
+        Instantly drop the block to the lowest valid position.
+
+        Parameters
+        ----------
+        grid : list of lists
+            Current logic grid.
+
+        Returns
+        -------
+        list
+            Final [row, column] position of the block.
+        """
         current_pos=[0,0]
         test_pos=[0,0]
         current_pos[0],current_pos[1]=self.position[0],self.position[1]
@@ -102,12 +131,27 @@ class Block:
         while(self.move_validation(grid,test_pos,self.block)):
             current_pos[0],current_pos[1]=test_pos[0],test_pos[1]
             test_pos[0]=test_pos[0]+1
-        #while(self.check_block_under(grid)==False):
-        #    self.update_block_position(1,[1,0],grid)
         return current_pos
 
     #pray for my soul, please
     def move_validation(self,grid,position,block):
+        """
+        Check if a block configuration is valid at a given position.
+
+        Parameters
+        ----------
+        grid : list of lists
+            Logic grid.
+        position : array-like
+            Proposed block position.
+        block : array-like
+            Block matrix.
+
+        Returns
+        -------
+        bool
+            True if the move is valid, False otherwise.
+        """
         max_row = len(grid) - 2
         max_col = len(grid[0]) - 2
         #bounds check -> left, right, down
@@ -124,6 +168,21 @@ class Block:
         return True
     
     def check_game_over(self,grid,start=True):
+        """
+        Determine whether the game is over due to block placement.
+
+        Parameters
+        ----------
+        grid : list of lists
+            Logic grid.
+        start : bool, optional
+            Indicates whether the check is during spawning.
+
+        Returns
+        -------
+        bool
+            True if the game is over.
+        """
         #check if there is anything in the same place that it is
         #(this is just for the "init")
         #check if is is blocked fully over the skyline
@@ -145,6 +204,21 @@ class Block:
         return False
 
     def check_block_under(self, grid):
+        """
+        Check whether there is a block or boundary directly under
+        the current block.
+
+        Parameters
+        ----------
+        grid : list of lists
+            Logic grid.
+
+        Returns
+        -------
+        bool
+            True if the block cannot fall further.
+        """
+
         max_row = len(grid) - 2
         #We have to check all cells
         for r, row in enumerate(self.block):

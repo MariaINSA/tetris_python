@@ -13,11 +13,26 @@ import random as rd
 # this list is defined by this equation
 # (0.8-((level-1)*0.007))^(level-1)
 # the eq is in seconds, the list in milis
-# why? ask the tetris gods
 speeds=(1000,793,618,473,355,262,190,135,94,64,43,28,18,11,7)
 
 class Game_logic:
+    """
+    Core class handling the logic and rules of the Tetris game.
+
+    This class manages block movement, scoring, levels, timing,
+    hold mechanics, game state, and interaction with both the
+    logic grid and graphical interface.
+    """
     def __init__(self, graphic):
+        """
+        Initialize the game logic.
+
+        Parameters
+        ----------
+        graphic : object
+            Main graphic controller containing the logic grid,
+            graphical grid, canvas, and UI update methods.
+        """
         self.play_screen = graphic
         self.grid_logic = graphic.lgrid
         self.graphic = graphic.grid_frame
@@ -38,6 +53,9 @@ class Game_logic:
         self.init_game()
 
     def init_game(self):
+        """
+        Reset all game variables to their initial state.
+        """
         # score & state
         self.score = 0
         self.lines_cleared = 0
@@ -69,11 +87,18 @@ class Game_logic:
         self.falling_timer = None
         
     def start_falling_timer(self):
+        """
+        Start or restart the falling timer for the current block.
+        """
         if self.falling_timer is not None:
             self.canvas.after_cancel(self.falling_timer)
         self.falling_timer = self.canvas.after(self.falling_speed, self.falling_mov)
 
     def falling_mov(self):
+        """
+        Automatically move the current block down according to
+        the falling speed and handle soft drop scoring.
+        """
         if self.paused or not self.game:
             return
 
@@ -94,6 +119,10 @@ class Game_logic:
         self.start_falling_timer()
  
     def place_block(self):
+        """
+        Lock the current block into the grid, check for line clears,
+        update score and level, and spawn a new block.
+        """
         if self.block.check_game_over(self.grid_logic.grid,False):
             self.game_over()
 
@@ -116,6 +145,14 @@ class Game_logic:
         self.update_image()
 
     def new_block(self,hold=False):
+        """
+        Spawn a new block from the block list.
+
+        Parameters
+        ----------
+        hold : bool, optional
+            Indicates whether the block change comes from a hold action.
+        """
         if(hold==False):
             self.grid_logic.update_grid()
         self.list_position=(self.list_position+1)%7
@@ -130,9 +167,16 @@ class Game_logic:
             self.game_over()
         self.start_falling_timer()
 
-    def update_game(self,move_type,move_info): ##HAY QUE ORGANIZAR ESTO
+    def update_game(self,move_type,move_info):
         """
-        Move type goes 1 for translation and 0 for rotation, 2 for hard drop
+        Apply a movement or rotation to the current block.
+
+        Parameters
+        ----------
+        move_type : int
+            Type of move (1 = translation, 0 = rotation, 2 = hard drop).
+        move_info : list
+            Information describing the movement or rotation.
         """
         #check for state and if locked on ground and rotating or translating, reset lock delay
         if (move_type!=2 and self.block_under):
@@ -167,6 +211,19 @@ class Game_logic:
             self.place_block()
         
     def get_score(self,lines):
+        """
+        Calculate score based on cleared lines and level.
+
+        Parameters
+        ----------
+        lines : int
+            Number of lines cleared.
+
+        Returns
+        -------
+        int
+            Score gained.
+        """
         scores=(0,100,300,500,800)
         total= scores[lines]*self.level
         if lines ==4: # check for tetris back to back
@@ -179,6 +236,9 @@ class Game_logic:
         return total
         
     def start_soft_drop(self):
+        """
+        Enable soft drop mode, increasing falling speed.
+        """
         if not self.soft_drop:
             self.soft_drop=True
             self.falling_speed=int(self.falling_speed/20)
@@ -186,11 +246,17 @@ class Game_logic:
                 self.falling_speed=1
     
     def end_soft_drop(self):
+        """
+        Disable soft drop mode and restore normal falling speed.
+        """
         self.soft_drop=False
         self.falling_speed=speeds[self.level-1]
         self.start_falling_timer()
 
     def hold(self):
+        """
+        Store the current block or swap it with the held block.
+        """
         if self.hold_state == False : 
             if self.hold_block == 0:
                 self.hold_block = self.current_block
@@ -210,6 +276,9 @@ class Game_logic:
             self.update_image()
 
     def update_image(self):
+        """
+        Update all graphical elements to reflect the current game state.
+        """
         self.grid_logic.update_shadow(self.block)
         self.graphic.update(self.grid_logic)
         self.play_screen.update_next(self.block_list,self.next_block_list,self.list_position)
@@ -217,6 +286,9 @@ class Game_logic:
         self.play_screen.update_text(self.lines_cleared,self.score,self.level,self.name)
 
     def pause_game(self):
+        """
+        Pause or resume the game and handle related timers and screens.
+        """
         if not self.paused:
             self.paused=True
             if (self.falling_timer!=None):
@@ -234,6 +306,9 @@ class Game_logic:
             self.start_falling_timer()
 
     def next_level(self):
+        """
+        Update the game level based on the number of cleared lines.
+        """
         #this is the fixed goal system
         # calculate what the level SHOULD be
         MAX_LEVEL = 15
@@ -245,6 +320,9 @@ class Game_logic:
             self.falling_speed = speeds[self.level - 1]
 
     def game_over(self):
+        """
+        End the current game, save the score, and reset the game state.
+        """
         self.game=False
         #cancel timers
         self.pause_game()
@@ -262,6 +340,14 @@ class Game_logic:
         self.update_image()
 
     def start_game(self,name):
+        """
+        Start a new game session.
+
+        Parameters
+        ----------
+        name : str
+            Player name.
+        """
         self.game=True
         if name is not None: 
             self.name=name
@@ -269,6 +355,9 @@ class Game_logic:
         self.update_image()
 
     def save_game(self):
+        """
+        Save the player's score to a file.
+        """
         file = open("scores.txt", "a")  # append mode
         L = self.name+","+str(self.level) +","+str(self.score)+","+str(self.lines_cleared)+"\n"
         file.write(L)
